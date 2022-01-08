@@ -1,0 +1,45 @@
+
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <style>
+            
+            body{
+                display: flex;
+                justify-content: center;
+            }
+            div{
+                margin: 10vh;
+                width: 30vw;
+                background-color: black;
+                padding: 2rem;
+            }
+            form *{
+                width: 100%;
+            }
+            p,h3{
+                color:white;
+            }
+            p input{
+                width: 100% ;
+                height: 3rem;
+                border: none;
+                border-radius: 1.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div>
+            <h3>Profile Edit</h3>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% comment %} {% for field in form %} {% endcomment %}
+                    {{form.as_p}}
+                {% comment %} {% endfor %} {% endcomment %}
+                {% comment %} {{form.errors}} {% endcomment %}
+                <p><input type="submit" value="Post"></p>
+            </form>
+        </div>
+    </body>
+</html>

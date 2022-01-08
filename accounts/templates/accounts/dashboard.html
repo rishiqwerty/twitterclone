@@ -1,0 +1,35 @@
+<style>
+.user-posts{
+    padding: 20px;
+    border-top: .1px solid gray;
+}
+#profile-image-post{
+    width: 40px;
+}
+.single-tweet{
+    display: flex;
+    column-gap: 10px;
+}
+.single-tweet p{
+    color: gray;
+}
+
+</style>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h1>Home Page</h1>
+    <p>Welcome to your Homepage.</p>
+
+    <div class="user-posts">
+        {% for d in data %}
+        <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+        <div class="single-tweet">
+            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+            <p>@{{user}}</p>
+        </div>
+        <p id="tweet">{{ d.tweet_post }}</p>
+        {% endfor %}
+    </div>
+    <a href="new_post" class="edit">Create</a>
+{% endblock %}

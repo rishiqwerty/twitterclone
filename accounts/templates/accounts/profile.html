@@ -1,0 +1,81 @@
+<style>
+    *{
+        background-color:black;
+    }
+    
+    * p,h3,h5{
+        color: white;
+    }
+    .cover{
+        width:100vw
+        
+    }
+    .cover img{
+        width:100%;
+        height: 30vh;
+    }
+    .profile-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+    }
+    #profile-img{
+        width: 200px;
+        margin-top: -12%;
+        background-color: transparent;
+    }
+    .edit{
+        width: 100px ;
+        padding: 10px 10px;
+        background-color:white;
+        border: none;
+        border-radius: 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: black;   
+    }
+    .user-posts{
+        padding: 20px;
+        border-top: .1px solid gray;
+    }
+    #profile-image-post{
+        width: 40px;
+    }
+    .single-tweet{
+        display: flex;
+        column-gap: 10px;
+    }
+    .single-tweet p{
+        color: gray;
+    }
+    #tweet{
+        color:white;
+    }
+</style>
+
+{% extends "base.html" %}
+<h3>Profile</h3>
+{% block content %} 
+<div class="cover">
+    <img src={{user.userprofile.cover_pic.url }} >
+</div>
+<div class="profile-description">
+    <img src={{user.userprofile.profile_pic.url }} id = "profile-img" >
+    <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+    <p>@{{user}}</p>
+    <a href="../profile_edit" class="edit">Edit</a>
+    <p>{{ user.userprofile.location }} {{ user.userprofile.website }}</p>
+    <p>{{ user.userprofile.date_of_birth}} {{ user.userprofile.created_at}}</p>
+</div>
+<div class="user-posts">
+    {% for d in data %}
+    <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+    <div class="single-tweet">
+        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+        <p>@{{user}}</p>
+    </div>
+    <p id="tweet">{{ d.tweet_post }}</p>
+    {% endfor %}
+</div>
+{% endblock %}
