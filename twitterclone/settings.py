@@ -12,15 +12,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+# import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# django_heroku.settings(locals(), staticfiles=False, allowed_hosts=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,12 +84,13 @@ WSGI_APPLICATION = 'twitterclone.wsgi.application'
 #     }
 # }
 
+print(str(os.getenv('PASSWORD')))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'twitterdb',
-        'USER': os.getenv("USER"),
-        'PASSWORD': os.getenv("PASSWORD"),
+        'USER': str(os.getenv('USER')),
+        'PASSWORD': 'qwerty',
         'HOST': 'localhost',
         'POST': '',
     }
@@ -138,3 +140,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'accounts/static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'accounts/static/images')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+#Activate django-heroku
