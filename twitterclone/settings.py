@@ -84,7 +84,6 @@ WSGI_APPLICATION = 'twitterclone.wsgi.application'
 #     }
 # }
 
-print(str(os.getenv('PASSWORD')))
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
