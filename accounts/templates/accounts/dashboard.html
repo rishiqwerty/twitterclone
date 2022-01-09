@@ -1,5 +1,8 @@
 <style>
 .user-posts{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
     border-top: .1px solid gray;
 }
@@ -12,6 +15,23 @@
 }
 .single-tweet p{
     color: gray;
+}
+#post-image{
+    width: 30vw;
+    margin-bottom: 5vh;
+}
+#tweet-create{
+    float: right;
+    width: 50px ;
+    padding: 12px;
+    background-color:black;
+    border: none;
+    border-radius: 1.4rem;
+    text-align: center;
+    text-decoration: none;
+    color: white; 
+    font-weight: bold;
+    margin: 2vw;
 }
 
 </style>
@@ -29,7 +49,11 @@
             <p>@{{user}}</p>
         </div>
         <p id="tweet">{{ d.tweet_post }}</p>
+        {% if d.img.url is not None %}
+            <img src={{ d.img.url }} id="post-image">
+            <br>
+        {% endif %}
         {% endfor %}
     </div>
-    <a href="new_post" class="edit">Create</a>
+    <a href="new_post" id="tweet-create">+</a>
 {% endblock %}

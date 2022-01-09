@@ -49,8 +49,23 @@
     .single-tweet p{
         color: gray;
     }
+    #post-image{
+        width: 20vw;
+    }
     #tweet{
         color:white;
+    }
+    #tweet-create{
+        float: right;
+        width: 50px ;
+        padding: 10px;
+        background-color:white;
+        border: none;
+        border-radius: 1.4rem;
+        text-align: center;
+        text-decoration: none;
+        color: black; 
+        font-weight: bold;
     }
 </style>
 
@@ -67,6 +82,7 @@
     <a href="../profile_edit" class="edit">Edit</a>
     <p>{{ user.userprofile.location }} {{ user.userprofile.website }}</p>
     <p>{{ user.userprofile.date_of_birth}} {{ user.userprofile.created_at}}</p>
+    <p>{{ user.userprofile.bio}}</p>
 </div>
 <div class="user-posts">
     {% for d in data %}
@@ -75,7 +91,17 @@
         <h5>{{ user.first_name }} {{ user.last_name }}</h5>
         <p>@{{user}}</p>
     </div>
+    <form method="POST">
+        {% csrf_token %}
+        <a href={% url 'post_delete' d.pk %} >Delete</a>
+    </form>
     <p id="tweet">{{ d.tweet_post }}</p>
+    {% if d.img.url is not None %}
+        <img src={{ d.img.url }} id="post-image">
+        <br>
+    {% endif %}
     {% endfor %}
+
+    <a href="../new_post" id="tweet-create">+</a>
 </div>
 {% endblock %}

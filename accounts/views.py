@@ -1,4 +1,5 @@
-from django.shortcuts import redirect, render
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, CreateRegisterForm, ProfileForm, UserPostForm
@@ -89,9 +90,20 @@ def profile(request):
     #         return redirect("dashboard")
     #     else:
     #         form = UserProfile()
+    # if request.method == "POST":
+    #     post = UserPost.objects.get(id=id)
+    #     post.delete()
+    #     for i in post:
+    #         print(i)
+
     return render(request, "accounts/profile.html", user_post)
 
-
+# Delete the post
+@login_required
+def post_delete(request, pk):
+    obj = get_object_or_404(UserPost, id=pk)
+    obj.delete()
+    return redirect("profile")
 # Profile Edit
 @login_required
 def profile_edit(request):

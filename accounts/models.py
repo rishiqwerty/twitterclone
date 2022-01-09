@@ -24,7 +24,7 @@ class UserPost(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     tweet_post = models.TextField(max_length=500)
     img = models.ImageField(
-        upload_to="images", blank = True
+        upload_to="images", blank = True, 
     )
     date_published= models.DateField(auto_now_add=True)
 
