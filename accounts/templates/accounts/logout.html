@@ -1,9 +1,40 @@
+<style>
+    *{
+        font-family:"Helvetica";
+        color: black;
+    }
+    a{
+        text-decoration: none;
+        font-weight: bold;
+        color: #1DA1F2;
+    }
+    #logo{
+        width:5vw;
+        margin: 5vh;
+    }
+    .logout{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width:38vw;
+        margin: 10vh auto;
+        background-color: #e8e8e8;
+        padding: 2vh 0 2vh 0;
+        border-radius: 1.3rem;
+    }
+    
 
-{% block title %}Logged out{% endblock %}
+</style>
+
 {% block content %}
-    <h1>Logged out</h1>
-    <p>
-    You have been successfully logged out.
-    You can <a href="{% url "login" %}">log-in again</a>.
-    </p>
+    <div>
+        <div class='logout'>
+            <img src="/static/images/twitter.png" id="logo">
+            <h1>Logged out</h1>
+            <p>
+            You have been successfully logged out.
+            You can <a href="{% url "login" %}">log-in again</a>.
+            </p>
+        </div>
+    </div>
 {% endblock %}

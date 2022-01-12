@@ -1,0 +1,215 @@
+<style>
+
+    .main{
+        display:flex;
+        flex-basis: 0;
+        width: 70vw;
+        margin: 0 auto;
+    }
+    .main div{
+        width: 35vw;
+    }
+
+    .side-bar{
+        display: flex;
+        border-right:.1px solid #d9d9d9;
+    }
+
+    .menu{
+        display:flex;
+        flex-direction: column;
+        position: fixed;
+        row-gap: 4vh;
+        padding: 1rem;
+    }
+    #menu-logo{
+        width: 30px;
+    }
+    #menu-logo{
+        margin-right: 4vw
+    }
+
+
+    .head-view{
+        display: flex;
+        margin-left: 2vw;
+        width:100%;
+    }
+    form{
+        width: 90%;
+    }
+    p input{
+        width: 100%;
+        height: 3rem;
+        border: none;
+        border-radius: 0.3rem;
+        
+    }
+
+
+    .main-div{
+        width: 50vw;
+        margin: 3vh auto;
+        padding: 2vh 0 2vh 0;
+        border-radius: 1.3rem;
+    }
+    .search-column{
+        
+        border-left: .1px solid #d9d9d9;
+    }
+
+
+
+
+
+    .user-posts{
+        display: flex;
+        flex-direction: column;
+        border: .1px solid #d9d9d9;
+        padding: 20px;
+    }
+    #profile-image-post{
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+    }
+    .single-tweet{
+        display: flex;
+        column-gap: 10px;
+        align-items: start;
+        align-self: start;
+    }
+    .single-tweet a{
+        display: flex;
+    }
+    .single-tweet p{
+        margin: 0 15px;
+        color: gray;
+    }
+    #tweet{
+        margin: 0 2.5vw;
+        align-self: start;
+    }
+    #post-image{
+        width: 94%;
+        margin: 40px; auto auto auto;
+        border-radius: 20px;
+
+    }
+    
+    #submit{
+        width: 4.5rem;
+        height: 45px;
+        border-radius: 2rem;
+        background-color: #1DA1F2;
+        color: white;
+        border: none;
+    }
+
+
+
+
+    .post-comment{
+        margin: 20px;
+        width: 100%;
+    }
+    .post-comment form{
+
+        display: flex;
+        justify-content: space-between;
+    }
+    .post-comment textarea{
+        border: none;
+        height: 30px;
+        width: 18vw;
+    }
+    
+
+
+    #tweet-create{
+        position: fixed;
+        bottom: 0;
+        width: 10vw;
+        padding: 16px 29px;
+        background-color:#1DA1F2;
+        border: none;
+        border-radius: 2.6rem;
+        text-align: center;
+        text-decoration: none;
+        color: white; 
+        font-weight: bolder;
+        margin: 2vw;
+    }
+</style>
+
+{% extends "base.html" %}
+{% block content %} 
+<div class='main'>
+    <div class="side-bar">
+        {% if request.user.is_authenticated %}
+            <nav class="menu">
+                    <a href="{% url "dashboard" %}"><img src="/static/images/home.png" id="menu-logo"/>Home</a>
+                
+                    <a href="{% url "search_users" %}"><img src="/static/images/search-interface-symbol.png" id="menu-logo"/>Search</a>
+                
+                    <a href="../profile"><img src="/static/images/user.png" id="menu-logo" />Profile</a>
+                
+                    <a href="new_post" id="tweet-create">Tweet</a>
+            </nav>
+        {% endif %}
+    </div>
+
+
+
+
+
+    <div class="main-div">
+        <div class="user-posts">
+            <div class="single-tweet">
+                <img src={{tweet.user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                <h5>{{ tweet.user.first_name }} {{ tweet.user.last_name }}</h5>
+                <p>@{{tweet.user}}</p>
+                <p>{{ tweet.date_published }}</p>
+            </div>
+            <p id="tweet">{{ tweet.tweet_post }}</p>
+            {% if tweet.img.url is not None %}
+                <img src={{ tweet.img.url }} id="post-image">
+                <br>
+            {% endif %}
+        </div>
+        
+        <div class="post-comment">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                    {{form.as_p}}
+                    
+                <p><input type="submit" value="Reply" id="submit"></p>
+            </form>
+        </div>
+        <div>
+            {% for comment in comments %}
+
+
+                <div class="user-posts">
+                    <div class="single-tweet">
+                        <img src={{comment.user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                        <h5>{{ comment.user.first_name }} {{ comment.user.last_name }}</h5>
+                        <p>@{{comment.user}}</p>
+                        <p>{{ comment.created_on }}</p>
+                    </div>
+                    <p id="tweet">{{ comment.comments }}</p>
+                    {% if comment.img.url is not None %}
+                        <img src={{ comment.img.url }} id="post-image">
+                        <br>
+                    {% endif %}
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="search-column">
+        
+    </div>
+</div>
+{% endblock %}

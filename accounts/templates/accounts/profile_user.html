@@ -1,6 +1,59 @@
 <style>
-    #content{
+    
+    
+    .cover img{
+        width:100%;
+        height: 20vh;
+    }
+    .profile-description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         
+    }
+    .profile-img-div{
+        width:auto;
+    }
+    #profile-img{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-top: -50%;
+        border-radius: 50%;
+        background-color: transparent;
+        
+    }
+    .edit{
+        width: 100px ;
+        padding: 10px 10px;
+        background-color:#1DA1F2;
+        border: none;
+        border-radius: 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: white;   
+    }
+    
+    #profile-image-post{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: transparent;
+    }
+    
+    #tweet-create{
+        position: fixed;
+        bottom: 0;
+        width: 50px ;
+        padding: 10px;
+        background-color:#1DA1F2;
+        border: none;
+        border-radius: 1.4rem;
+        text-align: center;
+        text-decoration: none;
+        color: white; 
+        font-weight: bold;
     }
     .main{
         display:flex;
@@ -17,7 +70,8 @@
         align-items: center;
     }
     .user-posts{
-        display: grid;
+        display: flex;
+        flex-direction: column;
         padding: 20px;
         width: 40vw;
         border: .1px solid #d9d9d9;
@@ -45,48 +99,28 @@
     #menu-logo{
         margin-right: 4vw
     }
-    .tweet-form{
-        border-right: .1px solid #d9d9d9;
-
+    
+    form{
+        width:40%;
+        display:flex;
+        justify-content: end;
     }
-    .tweet-form form > input{
-        padding: 20px;
-        width: 100%;
-        height:45px;
-        color: gray;
-        border:none;
+    #delete-post{
         
-        border-radius: 0.2rem;
-        margin-bottom: 1vh; 
-    }
-    label img{
-        width: 20px;
-        margin-left: 20px;
-    }
-    .submit-tweet{
-        margin: 80px 20px 0px 20px;
-        width: 5rem;
-        height: 30px;
-        border-radius: 2rem;
-        background-color: #1DA1F2;
-        color: white;
-        border: none;
-    }
-    #profile-image-post{
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 50%;
-        background-color: transparent;
+        text-align:right;
+        justify-content: end;
     }
     .single-tweet{
         display: flex;
         column-gap: 10px;
         align-items: start;
         align-self: start;
-        
+    }
+    .single-tweet a{
+        display: flex;
     }
     .single-tweet p{
+        margin: 0 15px;
         color: gray;
     }
     #tweet{
@@ -101,22 +135,27 @@
     #tweet-create{
         position: fixed;
         bottom: 0;
-        width: 10vw;
-        padding: 16px 29px;
+        padding: 29px 36px;
         background-color:#1DA1F2;
         border: none;
-        border-radius: 2.6rem;
+        border-radius: 2.4rem;
         text-align: center;
         text-decoration: none;
         color: white; 
         font-weight: bolder;
         margin: 2vw;
     }
-
 </style>
+
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
-{% block content %}
+    <h3>Profile</h3>
+    {% block content %} 
+
+
+
+
+
+
     <div class="main">
         <div class="side-bar">
             {% if request.user.is_authenticated %}
@@ -126,30 +165,33 @@
                         <a href="{% url "search_users" %}"><img src="/static/images/search-interface-symbol.png" id="menu-logo"/>Search</a>
                     
                         <a href="profile"><img src="/static/images/user.png" id="menu-logo" />Profile</a>
-
-                        <a href="new_post" id="tweet-create">Tweet</a>
                     
                 </nav>
             {% endif %}
         </div>
         <div class="body">
-            <div class="tweet-form">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <input type="text" name='tweet_post' placeholder="What's Happening">
-                        <input type="file" name='img' id="upload" hidden>
-                        <label for="upload"><img src="/static/images/upload.png" ></label>
-                    <span><input type="submit" value="Tweet" class="submit-tweet"></span>
-                </form>
+            <div class="cover">
+                <img src={{username.userprofile.cover_pic.url }} >
+            </div>
+            <div class="profile-description">
+                <div class="profile-img-div">
+                    <img src={{username.userprofile.profile_pic.url }} id = "profile-img" >
+                </div>
+                <h5>{{ username.first_name }} {{ username.last_name }}</h5>
+                <p>@{{username}}</p>
+                <a href="../profile_edit" class="edit">Edit</a>
+                <p>{{ username.userprofile.location }} {{ username.userprofile.website }}</p>
+                <p>{{ username.userprofile.date_of_birth}} {{ username.userprofile.created_at}}</p>
+                <p>{{ username.userprofile.bio}}</p>
             </div>
             {% for d in data %}
                 <a href={% url 'post_detail' d.pk%}>
                     <div class="user-posts">
                         <div class="single-tweet">
-                            <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
-                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-                            <p>@{{user}}</p>
-                            <p>{{ d.date_published }}
+                            <img src={{username.userprofile.profile_pic.url }} id = "profile-image-post" >
+                            <h5>{{ username.first_name }} {{ username.last_name }}</h5>
+                            <p>@{{username}}</p>
+                            <p>{{ d.date_published }}</p>
                         </div>
                         
                         <p id="tweet">{{ d.tweet_post }}</p>
@@ -164,6 +206,6 @@
 
         </div>
     </div>
-
-    
+        <a href="../../new_post" id="tweet-create">+</a>
+    </div>
 {% endblock %}

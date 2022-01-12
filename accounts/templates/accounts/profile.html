@@ -1,18 +1,9 @@
 <style>
-    *{
-        background-color:black;
-    }
     
-    * p,h3,h5{
-        color: white;
-    }
-    .cover{
-        width:100vw
-        
-    }
+    
     .cover img{
         width:100%;
-        height: 30vh;
+        height: 20vh;
     }
     .profile-description {
         display: flex;
@@ -20,88 +11,207 @@
         align-items: center;
         
     }
+    .profile-img-div{
+        width:auto;
+    }
     #profile-img{
-        width: 200px;
-        margin-top: -12%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        margin-top: -50%;
+        border-radius: 50%;
         background-color: transparent;
+        
     }
     .edit{
         width: 100px ;
         padding: 10px 10px;
-        background-color:white;
+        background-color:#1DA1F2;
         border: none;
         border-radius: 1.5rem;
         text-align: center;
         text-decoration: none;
-        color: black;   
+        color: white;   
     }
-    .user-posts{
-        padding: 20px;
-        border-top: .1px solid gray;
-    }
+    
     #profile-image-post{
-        width: 40px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: transparent;
     }
-    .single-tweet{
-        display: flex;
-        column-gap: 10px;
-    }
-    .single-tweet p{
-        color: gray;
-    }
-    #post-image{
-        width: 20vw;
-    }
-    #tweet{
-        color:white;
-    }
+    
     #tweet-create{
-        float: right;
+        position: fixed;
+        bottom: 0;
         width: 50px ;
         padding: 10px;
-        background-color:white;
+        background-color:#1DA1F2;
         border: none;
         border-radius: 1.4rem;
         text-align: center;
         text-decoration: none;
-        color: black; 
+        color: white; 
         font-weight: bold;
+    }
+    .main{
+        display:flex;
+        flex-basis: 0;
+        width: 70vw;
+        margin: 0 auto;
+    }
+    div{
+        width:100%;
+    }
+    .body{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .user-posts{
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        width: 40vw;
+        border: .1px solid #d9d9d9;
+    }
+
+    .side-bar{
+        border-right: .1px solid #d9d9d9;
+        display: flex;
+        
+    }
+    .search-column{
+        border-left: .1px solid #d9d9d9;
+    }
+
+    .menu{
+        display:flex;
+        flex-direction: column;
+        position: fixed;
+        row-gap: 4vh;
+        padding: 1rem;
+    }
+    #menu-logo{
+        width: 30px;
+    }
+    #menu-logo{
+        margin-right: 4vw
+    }
+    
+    form{
+        width:40%;
+        display:flex;
+        justify-content: end;
+    }
+    #delete-post{
+        
+        text-align:right;
+        justify-content: end;
+    }
+    .single-tweet{
+        display: flex;
+        column-gap: 10px;
+        align-items: start;
+        align-self: start;
+    }
+    .single-tweet a{
+        display: flex;
+    }
+    .single-tweet p{
+        margin: 0 15px;
+        color: gray;
+    }
+    #tweet{
+        margin: 0 2.5vw;
+        align-self: start;
+    }
+    #post-image{
+        width: 100%;
+        margin: 3vh auto 1vh auto;
+        border-radius: 20px;
+    }
+    #tweet-create{
+        position: fixed;
+        bottom: 0;
+        width: 10vw;
+        padding: 16px 29px;
+        background-color:#1DA1F2;
+        border: none;
+        border-radius: 2.6rem;
+        text-align: center;
+        text-decoration: none;
+        color: white; 
+        font-weight: bolder;
+        margin: 2vw;
     }
 </style>
 
 {% extends "base.html" %}
-<h3>Profile</h3>
-{% block content %} 
-<div class="cover">
-    <img src={{user.userprofile.cover_pic.url }} >
-</div>
-<div class="profile-description">
-    <img src={{user.userprofile.profile_pic.url }} id = "profile-img" >
-    <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-    <p>@{{user}}</p>
-    <a href="../profile_edit" class="edit">Edit</a>
-    <p>{{ user.userprofile.location }} {{ user.userprofile.website }}</p>
-    <p>{{ user.userprofile.date_of_birth}} {{ user.userprofile.created_at}}</p>
-    <p>{{ user.userprofile.bio}}</p>
-</div>
-<div class="user-posts">
-    {% for d in data %}
-    <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
-    <div class="single-tweet">
-        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-        <p>@{{user}}</p>
-    </div>
-    <form method="POST">
-        {% csrf_token %}
-        <a href={% url 'post_delete' d.pk %} >Delete</a>
-    </form>
-    <p id="tweet">{{ d.tweet_post }}</p>
-    {% if d.img.url is not None %}
-        <img src={{ d.img.url }} id="post-image">
-        <br>
-    {% endif %}
-    {% endfor %}
+    <h3>Profile</h3>
+    {% block content %} 
 
-    <a href="../new_post" id="tweet-create">+</a>
-</div>
+
+
+
+
+
+    <div class="main">
+        <div class="side-bar">
+            {% if request.user.is_authenticated %}
+                <nav class="menu">
+                        <a href="{% url "dashboard" %}"><img src="/static/images/home.png" id="menu-logo"/>Home</a>
+                    
+                        <a href="{% url "search_users" %}"><img src="/static/images/search-interface-symbol.png" id="menu-logo"/>Search</a>
+                    
+                        <a href="."><img src="/static/images/user.png" id="menu-logo" />Profile</a>
+
+                        <a href="../new_post" id="tweet-create">Tweet</a>
+                </nav>
+            {% endif %}
+        </div>
+        <div class="body">
+            <div class="cover">
+                <img src={{user.userprofile.cover_pic.url }} >
+            </div>
+            <div class="profile-description">
+                <div class="profile-img-div">
+                    <img src={{user.userprofile.profile_pic.url }} id = "profile-img" >
+                </div>
+                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                <p>@{{user}}</p>
+                <a href="../profile_edit" class="edit">Edit</a>
+                <p>{{ user.userprofile.location }} {{ user.userprofile.website }}</p>
+                <p>{{ user.userprofile.date_of_birth}} {{ user.userprofile.created_at}}</p>
+                <p>{{ user.userprofile.bio}}</p>
+            </div>
+            {% for d in data %}
+                <a href={% url 'post_detail' d.pk%}>
+                    <div class="user-posts">
+                        <div class="single-tweet">
+                            <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                            <p>@{{user}}</p>
+                            <p>{{ d.date_published }}</p>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <a href={% url 'post_delete' d.pk %} id= "delete-post" >Delete</a>
+                            </form>
+                        </div>
+                        
+                        <p id="tweet">{{ d.tweet_post }}</p>
+                        {% if d.img.url is not None %}
+                            <img src={{ d.img.url }} id="post-image">  
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        <div class="search-column">
+
+        </div>
+    </div>
+        
+    </div>
 {% endblock %}

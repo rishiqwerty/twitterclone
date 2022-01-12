@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db.models.base import Model
 from django.forms.models import ModelForm
-from .models import UserPost, UserProfile
+from .models import UserPost, UserProfile, Comments
 
 
 class LoginForm(forms.Form):
@@ -50,5 +50,25 @@ class UserPostForm(forms.ModelForm):
         model = UserPost
         fields = [
             "tweet_post",
+            "img"
+        ]
+
+class CommentsForm(forms.ModelForm):
+    comments = forms.CharField(
+        label='',
+        widget=forms.Textarea(
+            attrs={
+                   'placeholder': 'Your reply'}
+        ),
+        required='',
+    )
+    img = forms.ImageField(
+        label='',
+        required='',
+    )
+    class Meta:
+        model = Comments
+        fields = [
+            "comments",
             "img"
         ]

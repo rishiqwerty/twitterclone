@@ -85,22 +85,22 @@ WSGI_APPLICATION = 'twitterclone.wsgi.application'
 # }
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'twitterdb',
-    #     'USER': str(os.getenv('USER')),
-    #     'PASSWORD': 'qwerty',
-    #     'HOST': 'localhost',
-    #     'POST': '',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ddf8n9old38d7a',
-        'USER': 'dzwbpfrqdmyall',
-        'PASSWORD': '79103d3bf1ba2f8b39aca8e4b78ab37f70566c71bebec1dd711fccaeccb322e8',
-        'HOST': 'ec2-107-22-47-84.compute-1.amazonaws.com',
-        'POST': '5432',
+        'NAME': 'twitterdb',
+        'USER': str(os.getenv('USER')),
+        'PASSWORD': 'qwerty',
+        'HOST': 'localhost',
+        'POST': '',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'ddf8n9old38d7a',
+    #     'USER': 'dzwbpfrqdmyall',
+    #     'PASSWORD': '79103d3bf1ba2f8b39aca8e4b78ab37f70566c71bebec1dd711fccaeccb322e8',
+    #     'HOST': 'ec2-107-22-47-84.compute-1.amazonaws.com',
+    #     'POST': '5432',
+    # }
 }
 
 
