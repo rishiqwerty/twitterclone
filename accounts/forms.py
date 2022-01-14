@@ -7,8 +7,8 @@ from .models import UserPost, UserProfile, Comments
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=50)
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(max_length=50, label='',widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}), label='')
 
 
 class CreateRegisterForm(UserCreationForm):
@@ -24,7 +24,6 @@ class CreateRegisterForm(UserCreationForm):
         ]
 
 
-
 class EditRegister(forms.ModelForm):
     class Meta:
         model = User
@@ -33,7 +32,24 @@ class EditRegister(forms.ModelForm):
             "last_name",
             "username",
         ]
+
+
 class ProfileForm(forms.ModelForm):
+    date_of_birth = forms.DateField(required=False, label='',widget=forms.DateInput(attrs={'placeholder': 'Date of Birth'}))
+    profile_pic = forms.ImageField(
+        
+        required='',
+        widget=forms.FileInput
+    )
+    cover_pic = forms.ImageField(
+        
+        required='',
+        widget=forms.FileInput
+        
+    )
+    location = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Location'}))
+    website = forms.URLField(max_length=50, widget=forms.TextInput(attrs={'placeholder': 'Website'}))
+    bio = widget=forms.TextInput(attrs={'placeholder': 'Bio'})
     class Meta:
         model = UserProfile
         fields = [
@@ -45,6 +61,7 @@ class ProfileForm(forms.ModelForm):
             "bio",
         ]
 
+
 class UserPostForm(forms.ModelForm):
     class Meta:
         model = UserPost
@@ -53,19 +70,22 @@ class UserPostForm(forms.ModelForm):
             "img"
         ]
 
+
 class CommentsForm(forms.ModelForm):
     comments = forms.CharField(
         label='',
         widget=forms.Textarea(
             attrs={
-                   'placeholder': 'Your reply'}
+                'placeholder': 'Your reply'}
         ),
         required='',
+        
     )
     img = forms.ImageField(
         label='',
         required='',
     )
+
     class Meta:
         model = Comments
         fields = [

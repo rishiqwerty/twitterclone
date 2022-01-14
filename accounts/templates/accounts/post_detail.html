@@ -1,5 +1,8 @@
-<style>
 
+<style>
+    *{
+        font-family: Helvetica;
+    }
     .main{
         display:flex;
         flex-basis: 0;
@@ -37,6 +40,7 @@
     }
     form{
         width: 90%;
+        margin-top: 20px;
     }
     p input{
         width: 100%;
@@ -91,7 +95,7 @@
         align-self: start;
     }
     #post-image{
-        width: 94%;
+        width: 30vw;
         margin: 40px; auto auto auto;
         border-radius: 20px;
 
@@ -108,6 +112,13 @@
 
 
 
+    #profile-image-post{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: transparent;
+    }
 
     .post-comment{
         margin: 20px;
@@ -121,10 +132,35 @@
     .post-comment textarea{
         border: none;
         height: 30px;
-        width: 18vw;
+        width: 100%;
     }
     
 
+
+    #like{
+        background-color: transparent;
+        border: none;
+    }
+    #like img{
+        width: 20px;
+    }
+    #like:active{
+        background-color: #dd4814;
+    }
+    
+
+
+
+
+    #retweet, #like{
+        background-color: transparent;
+        border: none;
+    }
+
+    .like-comment-container, .like-comment-container form{
+        display: flex;
+        justify-content: center;
+    }
 
     #tweet-create{
         position: fixed;
@@ -143,6 +179,7 @@
 </style>
 
 {% extends "base.html" %}
+{% load humanize %}
 {% block content %} 
 <div class='main'>
     <div class="side-bar">
@@ -176,9 +213,35 @@
                 <img src={{ tweet.img.url }} id="post-image">
                 <br>
             {% endif %}
+
+            <div class="like-comment-container">
+                <form action="{% url 'liked_post' tweet.pk%}" method="POST">
+                    {% csrf_token %}
+                    
+                    <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{tweet.number_of_likes}}
+                </form>
+
+
+                <form action="{% url 'retweet' tweet.pk %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                </form>
+
+                <form action="{% url 'post_detail' tweet.pk %}" method="">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                </form>
+                
+            </div>
         </div>
         
         <div class="post-comment">
+            <div class="single-tweet">
+                <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                <p>@{{user}}</p>
+            </div>
             <form method="POST" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                     {{form.as_p}}
@@ -197,6 +260,12 @@
                         <p>@{{comment.user}}</p>
                         <p>{{ comment.created_on }}</p>
                     </div>
+                    {% if comment.user == request.user %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <a href={% url 'comment_delete' comment.pk %} id= "delete-post" >Delete</a>
+                        </form>
+                    {% endif %}
                     <p id="tweet">{{ comment.comments }}</p>
                     {% if comment.img.url is not None %}
                         <img src={{ comment.img.url }} id="post-image">

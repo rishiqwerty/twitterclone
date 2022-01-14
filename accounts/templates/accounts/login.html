@@ -80,11 +80,8 @@
                 
                     <form action="{% url 'login' %}" method="post">
                         {% csrf_token %}
-                        <input type="username" name="username" placeholder="Username"/>
-                        <input type="password" name="password" placeholder="Password" />
-                        
-                            <span>{{ error }}</span>
-                        
+                        {{form}}
+                        <span>{{ error }}</span>
                         <p><input type="submit" value="Log-in" id="submit"></p>
                         <p>Don't have an account?<a href="../register/">  Sign up</a></p>
                         

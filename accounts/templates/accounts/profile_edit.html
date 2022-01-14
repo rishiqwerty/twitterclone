@@ -25,7 +25,10 @@
             }
             .head-div{
                 display: flex;
-                margin-left: 2vw;
+
+                margin: 5vh 0;
+                margin-left: 4vw;
+
                 width:80%;
             }
             
@@ -81,17 +84,19 @@
             </div>
             <form method="POST" action="" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p><input type="username" name="username" placeholder="Username"/></p>
+                {{form2.as_p}}
+                {{form.as_p}}
+                {% comment %} <p><input type="username" name="username" placeholder="Username"/></p>
                 <p><input type="text" name="first_name" placeholder="First Name" /></p>
                 <p><input type="text" name="last_name" placeholder="Last Name" /></p>
-                <p><input type="date" name="date_of_birth" placeholder="Username"/></p>
+                <p><input type="date" name="date_of_birth" placeholder="Date of birth"/></p>
                 <p> <label for="upload"> Profile Pic </label>
                     <input type="file" name="profile_pic" placeholder="Profile Picture" /></p>
                 <p> <label for="upload"> Cover Pic </label>
                     <input type="file" name="cover_pic" placeholder="Cover Picture" /></p>
                 <p><input type="text" name="location" placeholder="Location" /></p>
                 <p><input type="url" name="website" placeholder="Website" /></p>
-                <p><input type="text" name="bio" placeholder="Bio" /></p>
+                <p><input type="text" name="bio" placeholder="Bio" /></p> {% endcomment %}
                     
                 <p class="submit-btn"><input type="submit" value="Save Changes" id="submit"></p>
             </form>

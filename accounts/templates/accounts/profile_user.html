@@ -1,5 +1,7 @@
 <style>
-    
+    *{
+        font-family: Helvetica;
+    }
     
     .cover img{
         width:100%;
@@ -12,17 +14,38 @@
         
     }
     .profile-img-div{
-        width:auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width:90%;
+        margin-top: 10px;
+        
     }
     #profile-img{
         width: 150px;
         height: 150px;
         object-fit: cover;
-        margin-top: -50%;
+        margin-top: -80px;
         border-radius: 50%;
         background-color: transparent;
         
     }
+    #follow{
+        width: 120px;
+        padding: 12px;
+        background-color: #1DA1F2;
+        border: none;
+        border-radius: 2.6rem;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        font-weight: bolder;
+        height: 50;
+
+    }
+
+
+
     .edit{
         width: 100px ;
         padding: 10px 10px;
@@ -135,16 +158,27 @@
     #tweet-create{
         position: fixed;
         bottom: 0;
-        padding: 29px 36px;
+        width: 10vw;
+        padding: 16px 29px;
         background-color:#1DA1F2;
         border: none;
-        border-radius: 2.4rem;
+        border-radius: 2.6rem;
         text-align: center;
         text-decoration: none;
         color: white; 
         font-weight: bolder;
         margin: 2vw;
     }
+    #retweet, #like{
+        background-color: transparent;
+        border: none;
+    }
+
+    .like-comment-container, .like-comment-container form{
+        display: flex;
+        justify-content: center;
+    }
+    
 </style>
 
 {% extends "base.html" %}
@@ -164,8 +198,9 @@
                     
                         <a href="{% url "search_users" %}"><img src="/static/images/search-interface-symbol.png" id="menu-logo"/>Search</a>
                     
-                        <a href="profile"><img src="/static/images/user.png" id="menu-logo" />Profile</a>
+                        <a href="../../profile"><img src="/static/images/user.png" id="menu-logo" />Profile</a>
                     
+                        <a href="../new_post" id="tweet-create">Tweet</a>
                 </nav>
             {% endif %}
         </div>
@@ -176,36 +211,68 @@
             <div class="profile-description">
                 <div class="profile-img-div">
                     <img src={{username.userprofile.profile_pic.url }} id = "profile-img" >
+                    <a href={% url 'follow' username.pk%} id="follow">Follow</a>
                 </div>
                 <h5>{{ username.first_name }} {{ username.last_name }}</h5>
                 <p>@{{username}}</p>
-                <a href="../profile_edit" class="edit">Edit</a>
-                <p>{{ username.userprofile.location }} {{ username.userprofile.website }}</p>
+                
+                <p>{{ username.userprofile.location }} <a href= "#">{{ username.userprofile.website }}</a></p>
                 <p>{{ username.userprofile.date_of_birth}} {{ username.userprofile.created_at}}</p>
                 <p>{{ username.userprofile.bio}}</p>
+                <p>Followers: <b>{{followers}}</b>
+                Following: <b>{{following}}</b></p>
             </div>
             {% for d in data %}
+            <div class="user-posts">
+                {% if d.check_retweet == True %}
+                <div>
+                    <p>Retweeted by {{username}}</p>
+                </div>
+                {% endif %}
+                <div class="single-tweet">
+                    <img src={{username.userprofile.profile_pic.url }} id = "profile-image-post" >
+                    <h5>{{ username.first_name }} {{ username.last_name }}</h5>
+                    <p>@{{username}}</p>
+                    <p>{{ d.date_published }}</p>
+                </div>
+                
                 <a href={% url 'post_detail' d.pk%}>
-                    <div class="user-posts">
-                        <div class="single-tweet">
-                            <img src={{username.userprofile.profile_pic.url }} id = "profile-image-post" >
-                            <h5>{{ username.first_name }} {{ username.last_name }}</h5>
-                            <p>@{{username}}</p>
-                            <p>{{ d.date_published }}</p>
-                        </div>
-                        
                         <p id="tweet">{{ d.tweet_post }}</p>
                         {% if d.img.url is not None %}
                             <img src={{ d.img.url }} id="post-image">  
                         {% endif %}
-                    </div>
-                </a>
+                        
+                        
+                        
+                        <div class="like-comment-container">
+                            <form action="{% url 'liked_post' d.pk%}" method="POST">
+                                {% csrf_token %}
+                                
+                                <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{d.number_of_likes}}
+                            </form>
+                            
+                            
+                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                                {% csrf_token %}
+                                
+                                <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                            </form>
+                            
+                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                                {% csrf_token %}
+                                <input type="text" value="../profile" name="page" hidden>
+                                <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                            </form>
+                            
+                        </div>
+                    </a>
+
+                </div>
             {% endfor %}
         </div>
         <div class="search-column">
 
         </div>
     </div>
-        <a href="../../new_post" id="tweet-create">+</a>
     </div>
 {% endblock %}

@@ -68,6 +68,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        
     }
     .user-posts{
         display: flex;
@@ -101,7 +102,7 @@
     }
     
     form{
-        width:40%;
+        width:30%;
         display:flex;
         justify-content: end;
     }
@@ -112,7 +113,7 @@
     }
     .single-tweet{
         display: flex;
-        column-gap: 10px;
+        column-gap: 1px;
         align-items: start;
         align-self: start;
     }
@@ -146,6 +147,19 @@
         font-weight: bolder;
         margin: 2vw;
     }
+
+
+    #retweet, #like{
+        background-color: transparent;
+        border: none;
+    }
+
+    .like-comment-container, .like-comment-container form{
+        display: flex;
+        justify-content: center;
+    }
+
+
 </style>
 
 {% extends "base.html" %}
@@ -182,30 +196,77 @@
                 <h5>{{ user.first_name }} {{ user.last_name }}</h5>
                 <p>@{{user}}</p>
                 <a href="../profile_edit" class="edit">Edit</a>
-                <p>{{ user.userprofile.location }} {{ user.userprofile.website }}</p>
+                <p>{{ user.userprofile.location }} <a href= "#">{{ user.userprofile.website }}</a></p>
                 <p>{{ user.userprofile.date_of_birth}} {{ user.userprofile.created_at}}</p>
-                <p>{{ user.userprofile.bio}}</p>
+                <p>{{ user.userprofile.bio}}</p> 
+                <p>Followers: <b>{{followers}}</b>
+                    Following: <b>{{following}}</b></p>
             </div>
             {% for d in data %}
+        
+            <div class="user-posts">
+                {% if d.check_retweet == True %}
+                <div>
+                    
+                    <p><img src= "/static/images/retweet.png" width="18px"> Retweeted by {{user}}</p>
+                </div>
+
+                <a href={% url 'profile' %} >
+                    <div class="single-tweet">
+                        <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p>@{{user}}</p>
+                        <p>{{ d.date_published }}</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <a href={% url 'post_delete' d.pk %} id= "delete-post" >Delete</a>
+                        </form>
+                    </a>
+                    </div>
+                {% else %}
+                <a href={% url 'profile' %} >
+                <div class="single-tweet">
+                    <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                    <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p>@{{user}}</p>
+                    <p>{{ d.date_published }}</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <a href={% url 'post_delete' d.pk %} id= "delete-post" >Delete</a>
+                    </form>
+                </a>
+                </div>
+                {% endif %}
+                
                 <a href={% url 'post_detail' d.pk%}>
-                    <div class="user-posts">
-                        <div class="single-tweet">
-                            <img src={{user.userprofile.profile_pic.url }} id = "profile-image-post" >
-                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
-                            <p>@{{user}}</p>
-                            <p>{{ d.date_published }}</p>
-                            <form method="POST">
-                                {% csrf_token %}
-                                <a href={% url 'post_delete' d.pk %} id= "delete-post" >Delete</a>
-                            </form>
-                        </div>
-                        
                         <p id="tweet">{{ d.tweet_post }}</p>
+                        
                         {% if d.img.url is not None %}
                             <img src={{ d.img.url }} id="post-image">  
                         {% endif %}
-                    </div>
+                        <div class="like-comment-container">
+                            <form action="{% url 'liked_post' d.pk%}" method="POST">
+                                {% csrf_token %}
+                                
+                                <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{d.number_of_likes}}
+                            </form>
+
+
+                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                                {% csrf_token %}
+                                
+                                <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                            </form>
+
+                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                                {% csrf_token %}
+                                <input type="text" value="../profile" name="page" hidden>
+                                <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                            </form>
+                            
+                        </div>
                 </a>
+            </div>
             {% endfor %}
         </div>
         <div class="search-column">
