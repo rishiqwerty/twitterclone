@@ -9,7 +9,7 @@ from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    date_of_birth = models.CharField(default="22-12-2022", max_length=12, editable=True)
+    date_of_birth = models.CharField(default="2022-1-1", max_length=12, editable=True)
     profile_pic = models.ImageField(default="spotify.png")
     cover_pic = models.ImageField(default="wallpaperflare.com_wallpaper.jpg")
     location = models.CharField(max_length=50, null=True, blank=True)
@@ -17,6 +17,7 @@ class UserProfile(models.Model):
     bio = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     follower = models.ManyToManyField(User, related_name="follow")
+    follow_check= models.CharField(max_length= 40, blank=True, default="Follow")
     def __str__(self):
         return self.user.username
 
@@ -53,6 +54,7 @@ class UserPost(models.Model):
         related_name="user_tweet",
         blank=True,
     )
+    check_like = models.BooleanField(blank=True, default=False)
 
     def number_of_likes(self):
         return self.likes.count()

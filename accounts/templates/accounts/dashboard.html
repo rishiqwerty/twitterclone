@@ -46,6 +46,7 @@
         margin-right: 4vw
     }
     .tweet-form{
+        width: 40vw;
         border-right: .1px solid #d9d9d9;
 
     }
@@ -127,6 +128,12 @@
         display: flex;
         justify-content: center;
     }
+
+
+
+    .search-column {
+        padding: 20px;
+    }
 </style>
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
@@ -187,20 +194,32 @@
                             <form action="{% url 'liked_post' d.pk%}" method="POST">
                                 {% csrf_token %}
                                 
-                                <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{d.number_of_likes}}
+                                {% if d.check_like == False %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="like" ><img src= "/static/images/love.png" width="20px"></button>{{d.number_of_likes}}
+                                {% else %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="like"><img src="/static/images/icons8-heart-48.png" width="20px" > </button>{{d.number_of_likes}}
+                                {% endif %}
                             </form>
 
 
                             <form action="{% url 'retweet' d.pk %}" method="POST">
                                 {% csrf_token %}
                                 
+                                {% if d.check_retweet == False %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
                                 <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                                {% else %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/icons8-retweet-32.png" width="20px"></button>
+                                {% endif %}
                             </form>
 
-                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                            <form action="{% url 'post_detail' d.pk %}" method="POST">
                                 {% csrf_token %}
                                 <input type="text" value="../profile" name="page" hidden>
-                                <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                                <submit type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></submit>
                             </form>
                             
                         </div>
@@ -209,8 +228,24 @@
                     </div>
             {% endfor %}
         </div>
+        
         <div class="search-column">
-            
+            {% for d in follo %}
+                {% if d.user.pk != user.id %}
+                <a href={% url 'profile_user' d.user.pk %} >
+                {% else %}
+                <a href={% url 'profile' %} >
+                {% endif %}
+                    <div class="users-list">
+                        <div class="profile-name">
+                            <img src={{d.user.userprofile.profile_pic.url }} id = "profile-image-post" >
+                            <h5>{{ d.user.first_name }} {{ d.user.last_name }}</h5>
+                            <p class='tag'>@{{d.user}}</p>
+                        </div>
+                        <p>{{ d.userprofile.bio}}</p>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
     </div>
 

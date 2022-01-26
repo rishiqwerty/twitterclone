@@ -104,7 +104,7 @@ def dashboard(request):
         if i.user_id == request.user.id:
             followers.append(UserProfile.objects.get(id=i.userprofile_id))
     print("Numbers: ", followers)
-
+    context["follo"] = followers
     # for people in followers:
     #     print(people.user)
     if len(followers) != 0:
@@ -214,7 +214,7 @@ def user_posts_form(request):
             instance = form.save()
             instance.user = request.user
             instance.save()
-            return redirect("../")
+            return redirect("profile")
     context = {"form": form}
 
     return render(request, "accounts/post.html", context)
@@ -253,11 +253,13 @@ def post_detail(request, pk):
     if request.method == "POST":
         form = CommentsForm(request.POST, request.FILES or None)
         if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.user_post = obj
-            instance.save()
+            if form.cleaned_data != {}:
+                instance = form.save(commit=False)
+                instance.user = request.user
+                instance.user_post = obj
+                instance.save()
             return redirect("./"+str(pk))
+
     comments = Comments.objects.filter(user_post=obj).order_by("-created_on")
     for i in comments:
         print(i)
@@ -272,17 +274,24 @@ def liked_post(request, pk):
     post = get_object_or_404(UserPost, id=pk)
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        liked = False
+        post.check_like = False
+        post.save()
     else:
         post.likes.add(request.user)
-        liked = True
+        post.check_like = True
+        post.save()
     post = get_object_or_404(UserPost, id=pk)
     total_likes = post.number_of_likes()
     print(request.path)
     # return render(request, request.path, {"likes_count": total_likes})
     # location =  request.POST.page
     # print(location)
-    return HttpResponseRedirect(reverse('post_detail', args=[str(pk)],))
+    if request.method == 'POST':
+        request.POST.get('page')
+        link = (request.POST.get('page'))
+    print("yea",link)
+    # return HttpResponseRedirect(reverse('dashboard'))
+    return redirect(link)
 
 
 @login_required
@@ -290,16 +299,20 @@ def follow(request, pk):
     user_visited = User.objects.get(id=pk)
     user = request.user
     print("Follower: ", user_visited, pk)
-    post = get_object_or_404(UserProfile, user=pk)
+    user_visited_data = get_object_or_404(UserProfile, user=pk)
     following = user.follow.all()
-    print(post)
+    print(user_visited_data)
     print("Following:", len(following))
-    if post.follower.filter(id=request.user.id).exists():
-        post.follower.remove(request.user)
+    if user_visited_data.follower.filter(id=request.user.id).exists():
+        user_visited_data.follower.remove(request.user)
+        user_visited_data.follow_check = "Follow"
+        user_visited_data.save()
     else:
-        post.follower.add(request.user)
+        user_visited_data.follower.add(request.user)
+        user_visited_data.follow_check = "Unfollow"
+        user_visited_data.save()
 
-    total_followers = post.number_of_followers()
+    total_followers = user_visited_data.number_of_followers()
     print("Followers:", total_followers)
     # total_following = post.number_of_following()
     # print("Following:", total_following)
@@ -327,16 +340,20 @@ def retweet(request, pk):
     print(request.user)
     if tweet_data.check_retweet == True:
         UserPost.objects.filter(id=pk).delete()
+        
     else:
         for i in tweet:
             new_retweet = UserPost.objects.create(
             retweet=tweet_data, retweet_user_id=tweet_data.user, user=request.user, tweet_post=i.tweet_post, date_published=i.date_published, img=i.img, check_retweet=True)
-        
-
+    
+    if request.method == 'POST':
+        request.POST.get('page')
+        link = (request.POST.get('page'))
+    print("yrtew", link)
     # Retweet issue1
     # RetweetTweet.objects.create(retweet=tweet_data, user=request.user)
     
-    return redirect("/accounts/")
+    return redirect(link)
     
 
 

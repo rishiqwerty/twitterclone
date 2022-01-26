@@ -216,6 +216,8 @@
                         <p>@{{post.user}}</p>
                         <p>{{ post.date_published }}</p>
                     </div>
+
+                    <a href={% url 'post_detail' post.pk%}>
                     <p id="tweet">{{ post.tweet_post }}</p>
                     {% if post.img.url is not None %}
                         <img src={{ post.img.url }} id="post-image">
@@ -226,23 +228,36 @@
                         <form action="{% url 'liked_post' post.pk%}" method="POST">
                             {% csrf_token %}
                             
-                            <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{post.number_of_likes}}
+                            {% if post.check_like == False %}
+                            <input type='hidden' value= {{request.get_full_path}} name='page'>
+                            <button type="submit", name="post_id" id="like" ><img src= "/static/images/love.png" width="20px"></button>{{post.number_of_likes}}
+                            {% else %}
+                            <input type='hidden' value= {{request.get_full_path}} name='page'>
+                            <button type="submit", name="post_id" id="like"><img src="/static/images/icons8-heart-48.png" width="20px" > </button>{{post.number_of_likes}}
+                            {% endif %}
                         </form>
 
 
                         <form action="{% url 'retweet' post.pk %}" method="POST">
                             {% csrf_token %}
                             
+                            {% if post.check_retweet == False %}
+                            <input type='hidden' value= "profile" name='page'>
                             <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                            {% else %}
+                            <input type='hidden' value= "profile" name='page'>
+                            <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/icons8-retweet-32.png" width="20px"></button>
+                            {% endif %}
                         </form>
 
                         <form action="{% url 'post_detail' post.pk %}" method="POST">
                             {% csrf_token %}
                             <input type="text" value="../profile" name="page" hidden>
-                            <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                            <submit type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></submit>
                         </form>
                         
                     </div>
+                </a>
                 </div>
             {% endfor %}
     </div>

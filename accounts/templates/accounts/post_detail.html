@@ -217,15 +217,26 @@
             <div class="like-comment-container">
                 <form action="{% url 'liked_post' tweet.pk%}" method="POST">
                     {% csrf_token %}
-                    
-                    <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{tweet.number_of_likes}}
+                    {% if tweet.check_like == False %}
+                        <input type='hidden' value= {{request.get_full_path}} name='page'>
+                        <button type="submit", name="post_id" id="like" ><img src= "/static/images/love.png" width="20px"></button>{{tweet.number_of_likes}}
+                        {% else %}
+                        <input type='hidden' value= {{request.get_full_path}} name='page'>
+                        <button type="submit", name="post_id" id="like"><img src="/static/images/icons8-heart-48.png" width="20px" > </button>{{tweet.number_of_likes}}
+                    {% endif %}
                 </form>
 
 
                 <form action="{% url 'retweet' tweet.pk %}" method="POST">
                     {% csrf_token %}
                     
+                    {% if tweet.check_retweet == False %}
+                    <input type='hidden' value= "profile" name='page'>
                     <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                    {% else %}
+                    <input type='hidden' value= "profile" name='page'>
+                    <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/icons8-retweet-32.png" width="20px"></button>
+                    {% endif %}
                 </form>
 
                 <form action="{% url 'post_detail' tweet.pk %}" method="">
@@ -263,7 +274,9 @@
                     {% if comment.user == request.user %}
                         <form method="POST">
                             {% csrf_token %}
+                            
                             <a href={% url 'comment_delete' comment.pk %} id= "delete-post" >Delete</a>
+
                         </form>
                     {% endif %}
                     <p id="tweet">{{ comment.comments }}</p>

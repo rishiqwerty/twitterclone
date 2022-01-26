@@ -6,3 +6,4 @@ Current features of this Twitter Clone
 - User can edit their profile data.
 - User can delete the post
 - User can comment on post.
+- User can Follow other users.

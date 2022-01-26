@@ -6,6 +6,7 @@
     .cover img{
         width:100%;
         height: 20vh;
+        object-fit: cover;
     }
     .profile-description {
         display: flex;
@@ -211,12 +212,12 @@
             <div class="profile-description">
                 <div class="profile-img-div">
                     <img src={{username.userprofile.profile_pic.url }} id = "profile-img" >
-                    <a href={% url 'follow' username.pk%} id="follow">Follow</a>
+                    <a href={% url 'follow' username.pk%} id="follow">{{ username.userprofile.follow_check }}</a>
                 </div>
                 <h5>{{ username.first_name }} {{ username.last_name }}</h5>
                 <p>@{{username}}</p>
                 
-                <p>{{ username.userprofile.location }} <a href= "#">{{ username.userprofile.website }}</a></p>
+                <p>{{ username.userprofile.location }} <a href= {{username.userprofile.website}}>{{ username.userprofile.website }}</a></p>
                 <p>{{ username.userprofile.date_of_birth}} {{ username.userprofile.created_at}}</p>
                 <p>{{ username.userprofile.bio}}</p>
                 <p>Followers: <b>{{followers}}</b>
@@ -247,21 +248,32 @@
                         <div class="like-comment-container">
                             <form action="{% url 'liked_post' d.pk%}" method="POST">
                                 {% csrf_token %}
-                                
-                                <button type="submit", name="post_id" id="like"><img src="/static/images/love.png" width="20px" > </button>{{d.number_of_likes}}
+                                {% if d.check_like == False %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="like" ><img src= "/static/images/love.png" width="20px"></button>{{d.number_of_likes}}
+                                {% else %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="like"><img src="/static/images/icons8-heart-48.png" width="20px" > </button>{{d.number_of_likes}}
+                                {% endif %}
                             </form>
                             
                             
                             <form action="{% url 'retweet' d.pk %}" method="POST">
                                 {% csrf_token %}
                                 
+                                {% if d.check_retweet == False %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
                                 <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/retweet.png" width="20px"></button>
+                                {% else %}
+                                <input type='hidden' value= {{request.get_full_path}} name='page'>
+                                <button type="submit", name="post_id" id="retweet" ><img src= "/static/images/icons8-retweet-32.png" width="20px"></button>
+                                {% endif %}
                             </form>
                             
-                            <form action="{% url 'retweet' d.pk %}" method="POST">
+                            <form action="{% url 'post_detail' d.pk %}" method="POST">
                                 {% csrf_token %}
                                 <input type="text" value="../profile" name="page" hidden>
-                                <button type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></button>
+                                <submit type="submit" name="post_id" id="retweet" ><img src= "/static/images/help.png" width="20px"></submit>
                             </form>
                             
                         </div>
