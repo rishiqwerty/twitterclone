@@ -112,7 +112,8 @@ def dashboard(request):
             user__in=[people.user for people in followers]
         ).union(my_posts).order_by('-date_published')
         context["data"] = all_posts
-
+    else:
+        context["data"] = my_posts
     # for i in all_posts:
     #     print(i.user.userprofile.profile_pic)
     # print(all_posts)
